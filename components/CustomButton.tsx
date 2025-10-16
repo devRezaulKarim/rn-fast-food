@@ -1,14 +1,7 @@
+import { CustomButtonProps } from "@/type";
 import cn from "clsx";
 import { ActivityIndicator, Text, TouchableOpacity, View } from "react-native";
 
-interface CustomButtonProps {
-  onPress?: () => void;
-  title?: string;
-  style?: string;
-  leftIcon?: React.ReactNode;
-  textStyle?: string;
-  isLoading?: boolean;
-}
 export const CustomButton = ({
   isLoading,
   leftIcon,

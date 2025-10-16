@@ -1,15 +1,7 @@
+import { CustomInputProps } from "@/type";
 import cn from "clsx";
 import { useState } from "react";
 import { Text, TextInput, View } from "react-native";
-
-interface CustomInputProps {
-  placeholder?: string;
-  value?: string;
-  label: string;
-  secureTextEntry?: boolean;
-  onChangeText?: (text: string) => void;
-  keyboardType?: "default" | "email-address" | "numeric" | "phone-pad";
-}
 
 export const CustomInput = ({
   placeholder = "Enter text",
