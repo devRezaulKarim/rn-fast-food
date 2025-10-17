@@ -11,9 +11,16 @@ import {
 export const appwriteConfig = {
   endpoint: process.env.EXPO_PUBLIC_APPWRITE_ENDPOINT!,
   projectId: process.env.EXPO_PUBLIC_APPWRITE_PROJECT_ID!,
-  platform: "com.rkz.fastfood",
+  platform: process.env.EXPO_PUBLIC_APPWRITE_PLATFORM_NAME!,
+  bucket: process.env.EXPO_PUBLIC_APPWRITE_BUCKET_ID!,
   database: process.env.EXPO_PUBLIC_APPWRITE_DB_ID!,
   userCollectionId: process.env.EXPO_PUBLIC_APPWRITE_DB_USER_TBL_ID!,
+  categoryCollectionId: process.env.EXPO_PUBLIC_APPWRITE_DB_CATEGORY_TBL_ID!,
+  menuCollectionId: process.env.EXPO_PUBLIC_APPWRITE_DB_MENU_TBL_ID!,
+  customizationsCollectionId:
+    process.env.EXPO_PUBLIC_APPWRITE_DB_CUSTOMIZATIONS_TBL_ID!,
+  menuCustomizationsCollectionId:
+    process.env.EXPO_PUBLIC_APPWRITE_DB_MENU_CUSTOMIZATIONS_TBL_ID!,
 };
 
 export const client = new Client();
