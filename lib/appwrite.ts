@@ -6,6 +6,7 @@ import {
   Databases,
   ID,
   Query,
+  Storage,
 } from "react-native-appwrite";
 
 export const appwriteConfig = {
@@ -31,6 +32,7 @@ client
 
 export const account = new Account(client);
 export const database = new Databases(client);
+export const storage = new Storage(client);
 const avatars = new Avatars(client);
 
 export const signIn = async ({ email, password }: SignInParams) => {
