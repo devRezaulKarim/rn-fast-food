@@ -37,7 +37,7 @@ const dummyData = {
       name: "Classic Cheeseburger",
       description: "Beef patty, cheese, lettuce, tomato",
       image_url:
-        "https://static.vecteezy.com/system/resources/previews/023/183/964/large_2x/big-tasty-cheeseburger-on-black-background-with-smoke-close-up-ai-generative-image-free-photo.jpg",
+        "https://static.vecteezy.com/system/resources/previews/025/252/271/non_2x/big-beef-double-cheese-burger-ai-generated-free-png.png",
       price: 25.99,
       rating: 4.5,
       calories: 550,

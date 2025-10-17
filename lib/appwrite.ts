@@ -1,4 +1,9 @@
-import { CreateUserParams, SignInParams } from "@/type";
+import {
+  CreateUserParams,
+  GetMenuParams,
+  MenuItem,
+  SignInParams,
+} from "@/type";
 import {
   Account,
   Avatars,
@@ -82,6 +87,38 @@ export const getCurrentUser = async () => {
     return currentUser.documents[0];
   } catch (error) {
     console.log({ error });
+    throw new Error(error as string);
+  }
+};
+
+export const getMenu = async ({
+  category,
+  query,
+}: GetMenuParams): Promise<MenuItem[]> => {
+  try {
+    const queries: string[] = [];
+    if (category) queries.push(Query.equal("categories", category));
+    if (query) queries.push(Query.search("name", query));
+
+    const menus = await database.listDocuments<MenuItem>(
+      appwriteConfig.database,
+      appwriteConfig.menuCollectionId,
+      queries
+    );
+    return menus.documents;
+  } catch (error) {
+    throw new Error(error as string);
+  }
+};
+
+export const getCategories = async () => {
+  try {
+    const categories = await database.listDocuments(
+      appwriteConfig.database,
+      appwriteConfig.categoryCollectionId
+    );
+    return categories.documents;
+  } catch (error) {
     throw new Error(error as string);
   }
 };
