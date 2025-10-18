@@ -1,4 +1,5 @@
 import {
+  Category,
   CreateUserParams,
   GetMenuParams,
   MenuItem,
@@ -111,9 +112,9 @@ export const getMenu = async ({
   }
 };
 
-export const getCategories = async () => {
+export const getCategories = async (): Promise<Category[]> => {
   try {
-    const categories = await database.listDocuments(
+    const categories = await database.listDocuments<Category>(
       appwriteConfig.database,
       appwriteConfig.categoryCollectionId
     );

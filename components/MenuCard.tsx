@@ -3,7 +3,6 @@ import React from "react";
 import { Image, Platform, Text, TouchableOpacity } from "react-native";
 
 const MenuCard = ({ item: { image_url, name, price } }: { item: MenuItem }) => {
-  console.log({ image_url });
   return (
     <TouchableOpacity
       className="menu-card"
