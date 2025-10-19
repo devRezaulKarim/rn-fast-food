@@ -1,3 +1,4 @@
+import { useCartStore } from "@/store/cart.store";
 import { MenuItem } from "@/type";
 import { useRouter } from "expo-router";
 import React from "react";
@@ -9,6 +10,8 @@ const MenuCard = ({
   item: MenuItem;
 }) => {
   const router = useRouter();
+
+  const { addItem } = useCartStore();
   return (
     <TouchableOpacity
       className="menu-card"
@@ -31,7 +34,12 @@ const MenuCard = ({
         {name}
       </Text>
       <Text className="body-regular text-gray-200 mb-4">From ${price}</Text>
-      <TouchableOpacity>
+      <TouchableOpacity
+        onPress={(e) => {
+          e.stopPropagation();
+          addItem({ id: $id, name, price, image_url, customizations: [] });
+        }}
+      >
         <Text className="paragraph-bold text-primary">Add to cart +</Text>
       </TouchableOpacity>
     </TouchableOpacity>
