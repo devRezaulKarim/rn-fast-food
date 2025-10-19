@@ -1,8 +1,14 @@
 import { MenuItem } from "@/type";
+import { useRouter } from "expo-router";
 import React from "react";
 import { Image, Platform, Text, TouchableOpacity } from "react-native";
 
-const MenuCard = ({ item: { image_url, name, price } }: { item: MenuItem }) => {
+const MenuCard = ({
+  item: { $id, image_url, name, price },
+}: {
+  item: MenuItem;
+}) => {
+  const router = useRouter();
   return (
     <TouchableOpacity
       className="menu-card"
@@ -11,6 +17,7 @@ const MenuCard = ({ item: { image_url, name, price } }: { item: MenuItem }) => {
           ? { elevation: 10, shadowColor: "#878787" }
           : {}
       }
+      onPress={() => router.push(`/menu-details/${$id}`)}
     >
       <Image
         source={{ uri: image_url }}

@@ -22,6 +22,7 @@ export default function Search() {
   const { data: categories } = useAppwrite({ fn: getCategories });
   useEffect(() => {
     refetch({ category, query, limit: 6 });
+  // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [category, query]);
   return (
     <SafeAreaView className="bg-white h-full">

@@ -123,3 +123,20 @@ export const getCategories = async (): Promise<Category[]> => {
     throw new Error(error as string);
   }
 };
+
+export const getMenuById = async ({
+  id,
+}: {
+  id: string;
+}): Promise<MenuItem> => {
+  try {
+    const menu = await database.getDocument<MenuItem>(
+      appwriteConfig.database,
+      appwriteConfig.menuCollectionId,
+      id
+    );
+    return menu;
+  } catch (error) {
+    throw new Error(error as string);
+  }
+};
