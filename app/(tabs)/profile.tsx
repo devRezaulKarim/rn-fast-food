@@ -10,9 +10,10 @@ import { Image, Platform, ScrollView, View } from "react-native";
 import { SafeAreaView } from "react-native-safe-area-context";
 
 export default function Profile() {
-  const { user } = useAuthStore();
+  const { user, logout } = useAuthStore();
   const handleLogOut = async () => {
     await signOut();
+    logout();
     router.replace("/sign-in");
   };
 

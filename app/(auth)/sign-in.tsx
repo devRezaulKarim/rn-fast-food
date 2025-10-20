@@ -1,11 +1,13 @@
 import { CustomButton } from "@/components/CustomButton";
 import { CustomInput } from "@/components/CustomInput";
 import { signIn } from "@/lib/appwrite";
+import useAuthStore from "@/store/auth.store";
 import { Link, router } from "expo-router";
 import { useState } from "react";
 import { Alert, Text, View } from "react-native";
 
 export default function SignIn() {
+  const { fetchCurrentUser } = useAuthStore();
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [form, setForm] = useState({ email: "", password: "" });
 
@@ -17,6 +19,7 @@ export default function SignIn() {
     try {
       setIsSubmitting(true);
       await signIn(form);
+      await fetchCurrentUser();
       router.replace("/");
     } catch (error) {
       if (error instanceof Error) {
