@@ -2,12 +2,13 @@ import { CartButton } from "@/components/CartButton";
 import Filter from "@/components/Filter";
 import MenuCard from "@/components/MenuCard";
 import SearchBar from "@/components/SearchBar";
+import { images } from "@/constants";
 import { getCategories, getMenu } from "@/lib/appwrite";
 import useAppwrite from "@/lib/useAppwrite";
 import cn from "clsx";
 import { useLocalSearchParams } from "expo-router";
 import React, { useEffect } from "react";
-import { FlatList, Text, View } from "react-native";
+import { FlatList, Image, Text, View } from "react-native";
 import { SafeAreaView } from "react-native-safe-area-context";
 
 export default function Search() {
@@ -22,7 +23,7 @@ export default function Search() {
   const { data: categories } = useAppwrite({ fn: getCategories });
   useEffect(() => {
     refetch({ category, query, limit: 6 });
-  // eslint-disable-next-line react-hooks/exhaustive-deps
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [category, query]);
   return (
     <SafeAreaView className="bg-white h-full">
@@ -64,7 +65,23 @@ export default function Search() {
             <Filter categories={categories!} />
           </View>
         )}
-        ListEmptyComponent={() => (!loading ? <Text>No items</Text> : null)}
+        ListEmptyComponent={() =>
+          !loading ? (
+            <View>
+              <Image
+                source={images.emptyState}
+                className="w-44 mx-auto"
+                resizeMode="contain"
+              />
+              <Text className="h3-bold text-center mb-3.5">
+                Nothing matched your search
+              </Text>
+              <Text className="font-medium text-center text-[#878787]">
+                Try a different search term or check for typos.
+              </Text>
+            </View>
+          ) : null
+        }
       />
     </SafeAreaView>
   );
