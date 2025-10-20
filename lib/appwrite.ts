@@ -140,3 +140,12 @@ export const getMenuById = async ({
     throw new Error(error as string);
   }
 };
+
+export const signOut = async () => {
+  try {
+    const session = await account.deleteSession("current");
+    return session;
+  } catch (error) {
+    throw new Error(error as string);
+  }
+};
