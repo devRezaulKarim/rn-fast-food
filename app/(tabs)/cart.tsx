@@ -1,6 +1,6 @@
+import CartHeader from "@/components/CartHeader";
 import { CartItem } from "@/components/CartItem";
 import { CustomButton } from "@/components/CustomButton";
-import CustomHeader from "@/components/CustomHeader";
 import { useCartStore } from "@/store/cart.store";
 import { PaymentInfoStripeProps } from "@/type";
 import cn from "clsx";
@@ -36,7 +36,7 @@ export default function Cart() {
         renderItem={({ item }) => <CartItem key={item.id} item={item} />}
         keyExtractor={(item) => item.id}
         contentContainerClassName="pb-8 px-4 pt-4"
-        ListHeaderComponent={() => <CustomHeader title="Your Cart" />}
+        ListHeaderComponent={() => <CartHeader />}
         ListEmptyComponent={() => <Text>Cart Empty!</Text>}
         ListFooterComponent={() =>
           totalItems > 0 && (
