@@ -1,50 +1,87 @@
-# Welcome to your Expo app 👋
+# Fast Food Mobile App
 
-This is an [Expo](https://expo.dev) project created with [`create-expo-app`](https://www.npmjs.com/package/create-expo-app).
+This is a cross-platform mobile application for a fast-food restaurant, built with React Native and Expo. It allows users to browse the menu, customize their orders, add items to their cart, and proceed to checkout. The app features user authentication, a persistent cart, and a clean, modern user interface.
 
-## Get started
+## Features
 
-1. Install dependencies
+-   **User Authentication**: Sign up, sign in, and sign out functionality.
+-   **Browse Menu**: View a list of available food items with details.
+-   **Search and Filter**: Search for specific items and filter by category.
+-   **Product Details**: View detailed information for each menu item.
+-   **Shopping Cart**: Add/remove items, and adjust quantities.
+-   **Order Summary**: View a summary of the items in the cart before placing an order.
+-   **Profile Management**: View user profile information.
 
-   ```bash
-   npm install
-   ```
+## Technologies Used
 
-2. Start the app
+-   **React Native**: A framework for building native apps using React.
+-   **Expo**: A platform for making universal native apps for Android, iOS, and the web.
+-   **TypeScript**: A typed superset of JavaScript that compiles to plain JavaScript.
+-   **Tailwind CSS (NativeWind)**: A utility-first CSS framework for rapidly building custom designs.
+-   **Zustand**: A small, fast, and scalable state-management solution.
+-   **Appwrite**: A backend platform for building web and mobile applications.
+-   **Expo Router**: A file-based router for React Native and web applications.
 
-   ```bash
-   npx expo start
-   ```
+## Project Structure
 
-In the output, you'll find options to open the app in a
+The project is organized into the following directories:
 
-- [development build](https://docs.expo.dev/develop/development-builds/introduction/)
-- [Android emulator](https://docs.expo.dev/workflow/android-studio-emulator/)
-- [iOS simulator](https://docs.expo.dev/workflow/ios-simulator/)
-- [Expo Go](https://expo.dev/go), a limited sandbox for trying out app development with Expo
+-   `app/`: Contains the different screens and navigation setup using Expo Router.
+    -   `(auth)`: Authentication-related screens (Sign In, Sign Up).
+    -   `(tabs)`: Main application screens after authentication (Home, Search, Cart, Profile).
+    -   `menu-details/`: Screen for displaying the details of a menu item.
+-   `assets/`: Static assets like fonts, icons, and images.
+-   `components/`: Reusable UI components used throughout the application.
+-   `constants/`: Global constants like colors, styles, and dummy data.
+-   `lib/`: Core logic, including Appwrite configuration, API calls, and custom hooks.
+-   `store/`: State management stores for authentication and the shopping cart.
 
-You can start developing by editing the files inside the **app** directory. This project uses [file-based routing](https://docs.expo.dev/router/introduction).
+## Getting Started
 
-## Get a fresh project
+### Prerequisites
 
-When you're ready, run:
+-   Node.js (v18 or newer)
+-   npm or yarn
+-   Expo Go app on your mobile device (for testing on a physical device)
 
-```bash
-npm run reset-project
-```
+### Installation
 
-This command will move the starter code to the **app-example** directory and create a blank **app** directory where you can start developing.
+1.  **Clone the repository**:
+    ```bash
+    git clone https://github.com/devRezaulKarim/rn-fast-food.git
+    cd rn-fast-food
+    ```
 
-## Learn more
+2.  **Install dependencies**:
+    ```bash
+    npm install
+    ```
 
-To learn more about developing your project with Expo, look at the following resources:
+3.  **Set up environment variables**:
+    Create a `.env` file in the root of the project and add the necessary Appwrite configuration. You can use the `.env.example` file as a template:
+    ```
+    EXPO_PUBLIC_APPWRITE_ENDPOINT=...
+    EXPO_PUBLIC_APPWRITE_PROJECT_ID=...
+    EXPO_PUBLIC_APPWRITE_PLATFORM_NAME=...
+    EXPO_PUBLIC_APPWRITE_BUCKET_ID=...
+    EXPO_PUBLIC_APPWRITE_DB_ID=...
+    EXPO_PUBLIC_APPWRITE_DB_USER_TBL_ID=...
+    EXPO_PUBLIC_APPWRITE_DB_CATEGORY_TBL_ID=...
+    EXPO_PUBLIC_APPWRITE_DB_MENU_TBL_ID=...
+    ```
 
-- [Expo documentation](https://docs.expo.dev/): Learn fundamentals, or go into advanced topics with our [guides](https://docs.expo.dev/guides).
-- [Learn Expo tutorial](https://docs.expo.dev/tutorial/introduction/): Follow a step-by-step tutorial where you'll create a project that runs on Android, iOS, and the web.
+### Running the Application
 
-## Join the community
+1.  **Start the development server**:
+    ```bash
+    npm start
+    ```
 
-Join our community of developers creating universal apps.
+2.  **Run on a mobile device or simulator**:
+    -   Scan the QR code with the Expo Go app on your iOS or Android device.
+    -   Or, press `i` to run on an iOS simulator or `a` to run on an Android emulator.
 
-- [Expo on GitHub](https://github.com/expo/expo): View our open source platform and contribute.
-- [Discord community](https://chat.expo.dev): Chat with Expo users and ask questions.
+## Acknowledgements
+
+-   This project was developed as a demonstration of a modern mobile application using React Native and Appwrite.
+-   The UI design is inspired by various food delivery applications.
