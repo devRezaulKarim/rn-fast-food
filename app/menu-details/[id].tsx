@@ -1,8 +1,11 @@
+import CustomHeader from "@/components/CustomHeader";
+import { images } from "@/constants";
 import { getMenuById } from "@/lib/appwrite";
 import useAppwrite from "@/lib/useAppwrite";
 import { useLocalSearchParams } from "expo-router";
-import React, { useEffect } from "react";
+import React from "react";
 import { ActivityIndicator, Image, Text, View } from "react-native";
+import { SafeAreaView } from "react-native-safe-area-context";
 
 const MenuDetails = () => {
   const { id } = useLocalSearchParams<{ id: string }>();
@@ -10,10 +13,6 @@ const MenuDetails = () => {
     fn: getMenuById,
     params: { id },
   });
-
-  useEffect(() => {
-    console.log({ menu });
-  }, [menu]);
 
   if (loading) {
     return <ActivityIndicator size="large" color="#FF9C01" />;
@@ -28,22 +27,50 @@ const MenuDetails = () => {
   }
 
   return (
-    <View>
+    <SafeAreaView className="p-4">
+      <CustomHeader />
       <Image
         source={{ uri: menu.image_url }}
-        style={{ width: "100%", height: 300 }}
-        resizeMode="cover"
+        className="w-full h-80"
+        resizeMode="contain"
       />
-      <View style={{ padding: 20 }}>
-        <Text style={{ fontSize: 24, fontWeight: "bold" }}>{menu.name}</Text>
-        <Text style={{ fontSize: 16, color: "gray", marginVertical: 10 }}>
-          {menu.description}
-        </Text>
-        <Text style={{ fontSize: 20, fontWeight: "bold", color: "#FF9C01" }}>
-          ${menu.price}
-        </Text>
+      <View className="my-6">
+        <View className="flex-row justify-between items-center gap-4">
+          <Text className="text-2xl font-quicksand-bold">{menu.name}</Text>
+          <Text className="text-2xl font-quicksand-bold text-primary">
+            ${menu.price}
+          </Text>
+        </View>
+
+        <View className="flex-row justify-between items-center mt-6">
+          <View className="items-center gap-1">
+            <Image source={images.star} className="size-6" resizeMode="cover" />
+            <Text className="text-dark-100 font-bold">{menu.rating}/5</Text>
+          </View>
+          <View className="items-center gap-1">
+            <Text className="text-gray-100">Calories</Text>
+            <Text className="text-dark-100 font-bold">{menu.calories}</Text>
+          </View>
+          <View className="items-center gap-1">
+            <Text className="text-gray-100">Protein</Text>
+            <Text className="text-dark-100 font-bold">{menu.protein}</Text>
+          </View>
+          <View className="items-center gap-1">
+            <Image source={images.van} className="size-6" resizeMode="cover" />
+            <Text className="text-dark-100 font-bold">Free</Text>
+          </View>
+          <View className="items-center gap-1">
+            <Image
+              source={images.clock}
+              className="size-6"
+              resizeMode="cover"
+            />
+            <Text className="text-dark-100 font-bold">20 - 30 Mins</Text>
+          </View>
+        </View>
       </View>
-    </View>
+      <Text>{menu.description}</Text>
+    </SafeAreaView>
   );
 };
 
