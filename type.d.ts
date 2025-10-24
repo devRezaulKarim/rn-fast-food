@@ -27,6 +27,7 @@ export interface Customization extends Models.Document {
   name: string;
   price: number;
   type: string;
+  image: string;
 }
 
 export interface CartCustomization {

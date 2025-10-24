@@ -11,6 +11,7 @@ interface Customization {
   name: string;
   price: number;
   type: "topping" | "side" | "size" | "crust" | string; // extend as needed
+  image: string;
 }
 
 interface MenuItem {
@@ -57,24 +58,6 @@ async function clearStorage(): Promise<void> {
   );
 }
 
-async function uploadImageToStorage(imageUrl: string) {
-  const response = await fetch(imageUrl);
-  const blob = await response.blob();
-  const fileObj = {
-    name: imageUrl.split("/").pop() || `file-${Date.now()}.jpg`,
-    type: "image/jpeg",
-    size: blob.size,
-    uri: imageUrl,
-  };
-  const file = await storage.createFile(
-    appwriteConfig.bucket,
-    ID.unique(),
-    fileObj
-  );
-
-  return storage.getFileViewURL(appwriteConfig.bucket, file.$id);
-}
-
 async function seed(): Promise<void> {
   // 1. Clear all
   await clearAll(appwriteConfig.categoryCollectionId);
@@ -106,6 +89,7 @@ async function seed(): Promise<void> {
         name: cus.name,
         price: cus.price,
         type: cus.type,
+        image: cus.image,
       }
     );
     customizationMap[cus.name] = doc.$id;
