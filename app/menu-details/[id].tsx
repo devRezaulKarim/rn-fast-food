@@ -1,10 +1,12 @@
+import { CartItemQuantity } from "@/components/CartItemQuantity";
+import { CustomButton } from "@/components/CustomButton";
 import CustomHeader from "@/components/CustomHeader";
 import { images } from "@/constants";
 import { getMenuWithCustomizationById } from "@/lib/appwrite";
 import useAppwrite from "@/lib/useAppwrite";
 import { Customization } from "@/type";
 import { useLocalSearchParams } from "expo-router";
-import React, { useEffect } from "react";
+import React, { useState } from "react";
 import {
   ActivityIndicator,
   FlatList,
@@ -36,8 +38,8 @@ const CustomizationCard = ({ item }: { item: Customization }) => {
       </View>
       <View className="p-4 flex-row justify-between items-center gap-x-2">
         <Text className="text-white">{item.name}</Text>
-        <TouchableOpacity className="bg-error w-8 h-8 rounded-full flex-center">
-          <Text className="text-white ">+</Text>
+        <TouchableOpacity className="bg-error items-center justify-center size-5 rounded-full">
+          <Text className="text-white text-sm">+</Text>
         </TouchableOpacity>
       </View>
     </View>
@@ -50,13 +52,7 @@ const MenuDetails = () => {
     fn: getMenuWithCustomizationById,
     params: { id },
   });
-
-  useEffect(() => {
-    console.log({
-      menuWithCustomization,
-      customizations: menuWithCustomization?.customizations,
-    });
-  }, [menuWithCustomization]);
+  const [quantity, setQuantity] = useState<number>(1);
 
   if (loading) {
     return <ActivityIndicator size="large" color="#FF9C01" />;
@@ -67,6 +63,13 @@ const MenuDetails = () => {
     (c) => c.type === "topping"
   );
 
+  const onDecrease = () => {
+    setQuantity((prev) => (prev > 1 ? prev - 1 : 1));
+  };
+  const onIncrease = () => {
+    setQuantity((prev) => prev + 1);
+  };
+
   if (!menu) {
     return (
       <View>
@@ -76,9 +79,9 @@ const MenuDetails = () => {
   }
 
   return (
-    <SafeAreaView className="p-4">
+    <SafeAreaView className="p-4 relative">
       <CustomHeader />
-      <ScrollView>
+      <ScrollView showsVerticalScrollIndicator={false}>
         <Image
           source={{ uri: menu.image_url }}
           className="w-full h-80"
@@ -153,11 +156,23 @@ const MenuDetails = () => {
               keyExtractor={(item) => item.$id}
               ItemSeparatorComponent={() => <View className="w-3" />}
               showsHorizontalScrollIndicator={false}
-              contentContainerClassName="py-2"
+              contentContainerClassName="py-2 pb-28"
             />
           </View>
         </View>
       </ScrollView>
+      <View className="absolute bottom-28 p-4 bg-white rounded-xl mx-4 w-full flex-row gap-x-6">
+        <CartItemQuantity
+          quantity={quantity}
+          onDecrease={onDecrease}
+          onIncrease={onIncrease}
+        />
+        <CustomButton
+          leftIcon={<Image source={images.bag} className="size-4 mr-2" />}
+          title="Add to Cart"
+          style="grow"
+        />
+      </View>
     </SafeAreaView>
   );
 };

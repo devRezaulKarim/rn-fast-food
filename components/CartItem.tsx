@@ -2,9 +2,17 @@ import { images } from "@/constants";
 import { useCartStore } from "@/store/cart.store";
 import { CartItemType } from "@/type";
 import { Image, Text, TouchableOpacity, View } from "react-native";
+import { CartItemQuantity } from "./CartItemQuantity";
 
 export const CartItem = ({ item }: { item: CartItemType }) => {
   const { increaseQty, decreaseQty, removeItem } = useCartStore();
+
+  const onDecrease = () => {
+    decreaseQty(item.id, item.customizations!);
+  };
+  const onIncrease = () => {
+    increaseQty(item.id, item.customizations!);
+  };
 
   return (
     <View className="cart-item">
@@ -23,33 +31,11 @@ export const CartItem = ({ item }: { item: CartItemType }) => {
             ${item.price}
           </Text>
 
-          <View className="flex flex-row items-center gap-x-4 mt-2">
-            <TouchableOpacity
-              onPress={() => decreaseQty(item.id, item.customizations!)}
-              className="cart-item__actions"
-            >
-              <Image
-                source={images.minus}
-                className="size-1/2"
-                resizeMode="contain"
-                tintColor={"#FF9C01"}
-              />
-            </TouchableOpacity>
-
-            <Text className="base-bold text-dark-100">{item.quantity}</Text>
-
-            <TouchableOpacity
-              onPress={() => increaseQty(item.id, item.customizations!)}
-              className="cart-item__actions"
-            >
-              <Image
-                source={images.plus}
-                className="size-1/2"
-                resizeMode="contain"
-                tintColor={"#FF9C01"}
-              />
-            </TouchableOpacity>
-          </View>
+          <CartItemQuantity
+            quantity={item.quantity}
+            onDecrease={onDecrease}
+            onIncrease={onIncrease}
+          />
         </View>
       </View>
 
