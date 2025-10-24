@@ -14,7 +14,8 @@ import {
 
 export default function AuthLayout() {
   const { isAuthenticated } = useAuthStore();
-  if (isAuthenticated) return <Redirect href="/" />;
+  if (isAuthenticated)
+    return <Redirect href="/menu-details/68f836210008528e720d" />;
 
   return (
     <KeyboardAvoidingView
