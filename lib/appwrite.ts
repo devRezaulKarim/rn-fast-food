@@ -1,9 +1,11 @@
 import {
   Category,
   CreateUserParams,
+  Customization,
   GetMenuParams,
   MenuItem,
   SignInParams,
+  User,
 } from "@/type";
 import {
   Account,
@@ -53,7 +55,7 @@ export const createUser = async ({
   email,
   password,
   name,
-}: CreateUserParams) => {
+}: CreateUserParams): Promise<User> => {
   try {
     const newAccount = await account.create({
       userId: ID.unique(),
@@ -63,29 +65,36 @@ export const createUser = async ({
     });
     if (!newAccount) throw Error;
     await signIn({ email, password });
-    const avatar = avatars.getInitialsURL(name);
-    return await database.createDocument(
+    const avatar = avatars.getInitialsURL(name).toString();
+    const document = await database.createDocument<User>(
       appwriteConfig.database,
       appwriteConfig.userCollectionId,
       ID.unique(),
       { account_id: newAccount.$id, email, name, avatar }
     );
+    const { $collectionId, $databaseId, $permissions, $sequence, ...rest } =
+      document;
+    return rest as User;
   } catch (error) {
     throw new Error(error as string);
   }
 };
 
-export const getCurrentUser = async () => {
+export const getCurrentUser = async (): Promise<User | null> => {
   try {
     const currentAccount = await account.get();
     if (!currentAccount) throw Error;
-    const currentUser = await database.listDocuments(
+    const currentUser = await database.listDocuments<User>(
       appwriteConfig.database,
       appwriteConfig.userCollectionId,
       [Query.equal("account_id", currentAccount.$id)]
     );
     if (!currentUser) throw Error;
-    return currentUser.documents[0];
+    const user = currentUser.documents[0];
+    if (!user) return null;
+    const { $collectionId, $databaseId, $permissions, $sequence, ...rest } =
+      user;
+    return rest as User;
   } catch (error) {
     console.log({ error });
     throw new Error(error as string);
@@ -106,7 +115,9 @@ export const getMenu = async ({
       appwriteConfig.menuCollectionId,
       queries
     );
-    return menus.documents;
+    return menus.documents.map(
+      ({ $collectionId, $databaseId, $permissions, $sequence, ...rest }) => rest
+    ) as MenuItem[];
   } catch (error) {
     throw new Error(error as string);
   }
@@ -118,7 +129,9 @@ export const getCategories = async (): Promise<Category[]> => {
       appwriteConfig.database,
       appwriteConfig.categoryCollectionId
     );
-    return categories.documents;
+    return categories.documents.map(
+      ({ $collectionId, $databaseId, $permissions, $sequence, ...rest }) => rest
+    ) as Category[];
   } catch (error) {
     throw new Error(error as string);
   }
@@ -135,7 +148,53 @@ export const getMenuById = async ({
       appwriteConfig.menuCollectionId,
       id
     );
-    return menu;
+    const { $collectionId, $databaseId, $permissions, $sequence, ...rest } =
+      menu;
+    return rest as MenuItem;
+  } catch (error) {
+    throw new Error(error as string);
+  }
+};
+
+export const getCustomizationByMenuId = async ({
+  menuId,
+}: {
+  menuId: string;
+}): Promise<Customization[]> => {
+  try {
+    const menuCustomizations = await database.listDocuments(
+      appwriteConfig.database,
+      appwriteConfig.menuCustomizationsCollectionId,
+      [Query.equal("menu", menuId)]
+    );
+
+    const customizationIds = menuCustomizations.documents.map(
+      (doc) => doc.customizations
+    );
+    if (!customizationIds.length) return [];
+    const customizations = await database.listDocuments<Customization>(
+      appwriteConfig.database,
+      appwriteConfig.customizationsCollectionId,
+      [Query.equal("$id", customizationIds)]
+    );
+    return customizations.documents.map(
+      ({ $collectionId, $databaseId, $permissions, $sequence, ...rest }) => rest
+    ) as Customization[];
+  } catch (error) {
+    throw new Error(error as string);
+  }
+};
+
+export const getMenuWithCustomizationById = async ({
+  id,
+}: {
+  id: string;
+}): Promise<{ menu: MenuItem; customizations: Customization[] }> => {
+  try {
+    const menu = await getMenuById({ id });
+    const customizations = await getCustomizationByMenuId({ menuId: id });
+
+    return { menu, customizations };
   } catch (error) {
     throw new Error(error as string);
   }

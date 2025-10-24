@@ -1,22 +1,30 @@
 import CustomHeader from "@/components/CustomHeader";
 import { images } from "@/constants";
-import { getMenuById } from "@/lib/appwrite";
+import { getMenuWithCustomizationById } from "@/lib/appwrite";
 import useAppwrite from "@/lib/useAppwrite";
 import { useLocalSearchParams } from "expo-router";
-import React from "react";
-import { ActivityIndicator, Image, Text, View } from "react-native";
+import React, { useEffect } from "react";
+import { ActivityIndicator, FlatList, Image, Text, View } from "react-native";
 import { SafeAreaView } from "react-native-safe-area-context";
 
 const MenuDetails = () => {
   const { id } = useLocalSearchParams<{ id: string }>();
-  const { data: menu, loading } = useAppwrite({
-    fn: getMenuById,
+  const { data: menuWithCustomization, loading } = useAppwrite({
+    fn: getMenuWithCustomizationById,
     params: { id },
   });
+
+  useEffect(() => {
+    console.log({
+      menuWithCustomization,
+      customizations: menuWithCustomization?.customizations,
+    });
+  }, [menuWithCustomization]);
 
   if (loading) {
     return <ActivityIndicator size="large" color="#FF9C01" />;
   }
+  const { menu, customizations } = menuWithCustomization!;
 
   if (!menu) {
     return (
@@ -70,6 +78,20 @@ const MenuDetails = () => {
         </View>
       </View>
       <Text>{menu.description}</Text>
+
+      <View className="my-10">
+        <FlatList
+          horizontal
+          data={customizations}
+          renderItem={({ item }) => (
+            <View className="border rounded mr-2 p-4">
+              <Text>{item.name}</Text>
+              <Text>{item.price}</Text>
+              <Text>{item.type}</Text>
+            </View>
+          )}
+        />
+      </View>
     </SafeAreaView>
   );
 };
