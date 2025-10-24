@@ -11,7 +11,7 @@ const dummyData = {
   customizations: [
     // Toppings
     {
-      name: "Extra Cheese",
+      name: "Cheese",
       price: 25,
       type: "topping",
       image: "https://i.ibb.co.com/wrd7tqq9/cheese.webp",

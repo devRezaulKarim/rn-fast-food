@@ -2,17 +2,47 @@ import CustomHeader from "@/components/CustomHeader";
 import { images } from "@/constants";
 import { getMenuWithCustomizationById } from "@/lib/appwrite";
 import useAppwrite from "@/lib/useAppwrite";
+import { Customization } from "@/type";
 import { useLocalSearchParams } from "expo-router";
 import React, { useEffect } from "react";
 import {
   ActivityIndicator,
   FlatList,
   Image,
+  Platform,
   ScrollView,
   Text,
+  TouchableOpacity,
   View,
 } from "react-native";
 import { SafeAreaView } from "react-native-safe-area-context";
+
+const CustomizationCard = ({ item }: { item: Customization }) => {
+  return (
+    <View
+      className="bg-[#3C2F2F] rounded-3xl shadow"
+      style={
+        Platform.OS === "android"
+          ? { elevation: 5, shadowColor: "#878787" }
+          : {}
+      }
+    >
+      <View className="rounded-3xl bg-white p-4 relative -top-[1px]">
+        <Image
+          source={{ uri: item.image }}
+          className="size-20"
+          resizeMode="cover"
+        />
+      </View>
+      <View className="p-4 flex-row justify-between items-center gap-x-2">
+        <Text className="text-white">{item.name}</Text>
+        <TouchableOpacity className="bg-error w-8 h-8 rounded-full flex-center">
+          <Text className="text-white ">+</Text>
+        </TouchableOpacity>
+      </View>
+    </View>
+  );
+};
 
 const MenuDetails = () => {
   const { id } = useLocalSearchParams<{ id: string }>();
@@ -99,39 +129,33 @@ const MenuDetails = () => {
         </View>
         <Text>{menu.description}</Text>
 
-        <View className="my-10">
-          <FlatList
-            horizontal
-            data={toppingCUstomizations}
-            renderItem={({ item }) => (
-              <View className="border rounded mr-2 p-4">
-                <Image
-                  source={{ uri: item.image }}
-                  className="size-20"
-                  resizeMode="cover"
-                />
-                <Text>{item.name}</Text>
-                <Text>{item.price}</Text>
-                <Text>{item.type}</Text>
-              </View>
-            )}
-          />
-          <FlatList
-            horizontal
-            data={sideCUstomizations}
-            renderItem={({ item }) => (
-              <View className="border rounded mr-2 p-4">
-                <Image
-                  source={{ uri: item.image }}
-                  className="size-20"
-                  resizeMode="cover"
-                />
-                <Text>{item.name}</Text>
-                <Text>{item.price}</Text>
-                <Text>{item.type}</Text>
-              </View>
-            )}
-          />
+        <View className="my-10 gap-y-6">
+          <View className="gap-y-[8px]">
+            <Text className="text-dark-100 font-quicksand-bold">Toppings</Text>
+            <FlatList
+              horizontal
+              data={toppingCUstomizations}
+              renderItem={({ item }) => <CustomizationCard item={item} />}
+              keyExtractor={(item) => item.$id}
+              ItemSeparatorComponent={() => <View className="w-3" />}
+              showsHorizontalScrollIndicator={false}
+              contentContainerClassName="py-2"
+            />
+          </View>
+          <View className="gap-y-[8px]">
+            <Text className="text-dark-100 font-quicksand-bold">
+              Side Options
+            </Text>
+            <FlatList
+              horizontal
+              data={sideCUstomizations}
+              renderItem={({ item }) => <CustomizationCard item={item} />}
+              keyExtractor={(item) => item.$id}
+              ItemSeparatorComponent={() => <View className="w-3" />}
+              showsHorizontalScrollIndicator={false}
+              contentContainerClassName="py-2"
+            />
+          </View>
         </View>
       </ScrollView>
     </SafeAreaView>
