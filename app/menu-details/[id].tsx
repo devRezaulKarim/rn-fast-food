@@ -32,7 +32,7 @@ const CustomizationCard = ({ item }: { item: Customization }) => {
       <View className="rounded-3xl bg-white p-4 relative -top-[1px]">
         <Image
           source={{ uri: item.image }}
-          className="size-20"
+          className="size-20 mx-auto"
           resizeMode="cover"
         />
       </View>
