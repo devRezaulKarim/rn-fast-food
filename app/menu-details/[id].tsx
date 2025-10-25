@@ -36,7 +36,7 @@ const CustomizationCard = ({
       className="bg-[#3C2F2F] rounded-3xl shadow"
       style={
         Platform.OS === "android"
-          ? { elevation: 5, shadowColor: "#878787" }
+          ? { elevation: 10, shadowColor: "#878787" }
           : {}
       }
     >
@@ -125,15 +125,17 @@ const MenuDetails = () => {
   }
 
   return (
-    <SafeAreaView className="p-4 relative bg-white ">
-      <CustomHeader />
+    <SafeAreaView className="py-4 relative bg-white ">
+      <View className="px-4">
+        <CustomHeader />
+      </View>
       <ScrollView showsVerticalScrollIndicator={false}>
         <Image
           source={{ uri: menu.image_url }}
           className="w-full h-80"
           resizeMode="contain"
         />
-        <View className="my-6">
+        <View className="my-6 px-4">
           <View className="flex-row justify-between items-center gap-4">
             <Text className="text-2xl font-quicksand-bold">{menu.name}</Text>
             <Text className="text-2xl font-quicksand-bold text-primary">
@@ -175,12 +177,14 @@ const MenuDetails = () => {
               <Text className="text-dark-100 font-bold">20 - 30 Mins</Text>
             </View>
           </View>
+          <Text className="mt-6">{menu.description}</Text>
         </View>
-        <Text>{menu.description}</Text>
 
         <View className="my-10 gap-y-6">
           <View className="gap-y-[8px]">
-            <Text className="text-dark-100 font-quicksand-bold">Toppings</Text>
+            <Text className="text-dark-100 font-quicksand-bold px-4">
+              Toppings
+            </Text>
             <FlatList
               horizontal
               data={toppingCUstomizations}
@@ -196,11 +200,11 @@ const MenuDetails = () => {
               keyExtractor={(item) => item.$id}
               ItemSeparatorComponent={() => <View className="w-3" />}
               showsHorizontalScrollIndicator={false}
-              contentContainerClassName="py-2"
+              contentContainerClassName="py-4 px-4"
             />
           </View>
           <View className="gap-y-[8px]">
-            <Text className="text-dark-100 font-quicksand-bold">
+            <Text className="text-dark-100 font-quicksand-bold px-4">
               Side Options
             </Text>
             <FlatList
@@ -218,12 +222,19 @@ const MenuDetails = () => {
               keyExtractor={(item) => item.$id}
               ItemSeparatorComponent={() => <View className="w-3" />}
               showsHorizontalScrollIndicator={false}
-              contentContainerClassName="py-2 pb-28"
+              contentContainerClassName="py-4 pb-28 px-4"
             />
           </View>
         </View>
       </ScrollView>
-      <View className="absolute bottom-28 p-4 bg-white rounded-xl mx-4 w-full flex-row gap-x-6">
+      <View
+        className="absolute bottom-28 p-4 bg-white rounded-xl mx-4 flex-row gap-x-6"
+        style={
+          Platform.OS === "android"
+            ? { elevation: 10, shadowColor: "#878787" }
+            : {}
+        }
+      >
         <CartItemQuantity
           quantity={quantity}
           onDecrease={onDecrease}
