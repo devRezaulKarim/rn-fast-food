@@ -48,7 +48,7 @@ export default function Profile() {
             textStyle="!text-primary"
           />
           <CustomButton
-            leftIcon={<Image source={images.logout} className="size-8 mr-2" />}
+            leftIcon={<Image source={images.logout} className="size-6 mr-2" />}
             title="Logout"
             style="bg-error/10 border border-error"
             textStyle="!text-error"
