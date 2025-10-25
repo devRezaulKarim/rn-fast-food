@@ -1,10 +1,12 @@
 import CartHeader from "@/components/CartHeader";
 import { CartItem } from "@/components/CartItem";
 import { CustomButton } from "@/components/CustomButton";
+import { images } from "@/constants";
 import { useCartStore } from "@/store/cart.store";
 import { PaymentInfoStripeProps } from "@/type";
 import cn from "clsx";
-import { FlatList, Text, View } from "react-native";
+import { Link } from "expo-router";
+import { FlatList, Image, Text, View } from "react-native";
 import { SafeAreaView } from "react-native-safe-area-context";
 
 const PaymentInfo = ({
@@ -37,7 +39,21 @@ export default function Cart() {
         keyExtractor={(item) => item.cartKey}
         contentContainerClassName="pb-8 px-4 pt-4"
         ListHeaderComponent={() => <CartHeader />}
-        ListEmptyComponent={() => <Text>Cart Empty!</Text>}
+        ListEmptyComponent={() => (
+          <View>
+            <Image
+              source={images.emptyState}
+              className="w-44 mx-auto"
+              resizeMode="contain"
+            />
+            <Text className="h3-bold text-center mb-3.5">Cart is empty!</Text>
+            <Link href="/search" className="py-3 px-6 bg-primary rounded-full w-fit mx-auto">
+              <Text className="font-medium text-center text-white ">
+                Browse menu to add some items 🍔
+              </Text>
+            </Link>
+          </View>
+        )}
         ListFooterComponent={() =>
           totalItems > 0 && (
             <View className="gap-5">
