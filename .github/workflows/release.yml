@@ -1,0 +1,73 @@
+
+name: Build and Release APK
+
+on:
+  push:
+    branches:
+      - main
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Setup Node
+        uses: actions/setup-node@v4
+        with:
+          node-version: 20
+
+      - name: Setup Java
+        uses: actions/setup-java@v4
+        with:
+          distribution: "temurin"
+          java-version: "17"
+
+      - name: Install dependencies
+        run: npm install
+
+      - name: Install EAS CLI
+        run: npm install -g eas-cli
+
+      - name: Build APK
+        run: eas build --platform android --profile preview --non-interactive
+        env:
+          EXPO_TOKEN: ${{ secrets.EXPO_TOKEN }}
+          EXPO_PUBLIC_APPWRITE_ENDPOINT: ${{ secrets.EXPO_PUBLIC_APPWRITE_ENDPOINT }}
+          EXPO_PUBLIC_APPWRITE_PROJECT_ID: ${{ secrets.EXPO_PUBLIC_APPWRITE_PROJECT_ID }}
+          EXPO_PUBLIC_APPWRITE_PLATFORM_NAME: ${{ secrets.EXPO_PUBLIC_APPWRITE_PLATFORM_NAME }}
+          EXPO_PUBLIC_APPWRITE_BUCKET_ID: ${{ secrets.EXPO_PUBLIC_APPWRITE_BUCKET_ID }}
+          EXPO_PUBLIC_APPWRITE_DB_ID: ${{ secrets.EXPO_PUBLIC_APPWRITE_DB_ID }}
+          EXPO_PUBLIC_APPWRITE_DB_USER_TBL_ID: ${{ secrets.EXPO_PUBLIC_APPWRITE_DB_USER_TBL_ID }}
+          EXPO_PUBLIC_APPWRITE_DB_CATEGORY_TBL_ID: ${{ secrets.EXPO_PUBLIC_APPWRITE_DB_CATEGORY_TBL_ID }}
+          EXPO_PUBLIC_APPWRITE_DB_MENU_TBL_ID: ${{ secrets.EXPO_PUBLIC_APPWRITE_DB_MENU_TBL_ID }}
+          EXPO_PUBLIC_APPWRITE_DB_CUSTOMIZATIONS_TBL_ID: ${{ secrets.EXPO_PUBLIC_APPWRITE_DB_CUSTOMIZATIONS_TBL_ID }}
+          EXPO_PUBLIC_APPWRITE_DB_MENU_CUSTOMIZATIONS_TBL_ID: ${{ secrets.EXPO_PUBLIC_APPWRITE_DB_MENU_CUSTOMIZATIONS_TBL_ID }}
+          
+      - name: Get APK path
+        id: apk_path
+        run: echo "path=$(ls -t ~/Downloads/*.apk | head -1)" >> $GITHUB_OUTPUT
+
+      - name: Create Release
+        id: create_release
+        uses: actions/create-release@v1
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        with:
+          tag_name: ${{ github.run_number }}
+          release_name: Release ${{ github.run_number }}
+          draft: false
+          prerelease: false
+
+      - name: Upload Release Asset
+        id: upload_release_asset
+        uses: actions/upload-release-asset@v1
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        with:
+          upload_url: ${{ steps.create_release.outputs.upload_url }}
+          asset_path: ${{ steps.apk_path.outputs.path }}
+          asset_name: fast-food.apk
+          asset_content_type: application/vnd.android.package-archive
