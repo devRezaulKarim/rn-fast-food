@@ -4,9 +4,10 @@ import CustomHeader from "@/components/CustomHeader";
 import { images } from "@/constants";
 import { getMenuWithCustomizationById } from "@/lib/appwrite";
 import useAppwrite from "@/lib/useAppwrite";
+import { useCartStore } from "@/store/cart.store";
 import { CartCustomization, Customization } from "@/type";
 import { useLocalSearchParams } from "expo-router";
-import React, { useEffect, useState } from "react";
+import React, { useState } from "react";
 import {
   ActivityIndicator,
   FlatList,
@@ -65,14 +66,11 @@ const MenuDetails = () => {
     fn: getMenuWithCustomizationById,
     params: { id },
   });
+  const { addItem } = useCartStore();
   const [quantity, setQuantity] = useState<number>(1);
   const [selectedCustomizations, setSelectedCustomizations] = useState<
     CartCustomization[]
   >([]);
-
-  useEffect(() => {
-    console.log({ selectedCustomizations });
-  }, [selectedCustomizations]);
 
   if (loading) {
     return <ActivityIndicator size="large" color="#FF9C01" />;
@@ -103,6 +101,18 @@ const MenuDetails = () => {
           type,
         },
       ];
+    });
+  };
+
+  const handleAddToCart = () => {
+    const { $id, name, price, image_url } = menu;
+    addItem({
+      id: $id,
+      name,
+      price,
+      image_url,
+      customizations: selectedCustomizations,
+      quantity,
     });
   };
 
@@ -220,6 +230,7 @@ const MenuDetails = () => {
           onIncrease={onIncrease}
         />
         <CustomButton
+          onPress={handleAddToCart}
           leftIcon={<Image source={images.bag} className="size-4 mr-2" />}
           title="Add to Cart"
           style="grow"

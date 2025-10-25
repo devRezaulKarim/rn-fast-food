@@ -34,7 +34,7 @@ export default function Cart() {
       <FlatList
         data={items}
         renderItem={({ item }) => <CartItem key={item.id} item={item} />}
-        keyExtractor={(item) => item.id}
+        keyExtractor={(item) => item.cartKey}
         contentContainerClassName="pb-8 px-4 pt-4"
         ListHeaderComponent={() => <CartHeader />}
         ListEmptyComponent={() => <Text>Cart Empty!</Text>}
@@ -47,7 +47,7 @@ export default function Cart() {
                 </Text>
                 <PaymentInfo
                   label={`Total Items (${totalItems})`}
-                  value={`${totalPrice.toFixed(2)}`}
+                  value={`$${totalPrice.toFixed(2)}`}
                 />
                 <PaymentInfo label={`Delivery Fee`} value={`$5`} />
                 <PaymentInfo

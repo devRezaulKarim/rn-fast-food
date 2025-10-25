@@ -1,6 +1,17 @@
 import { CartCustomization, CartStore } from "@/type";
 import { create } from "zustand";
 
+function generateCartItemKey(
+  id: string,
+  customizations: CartCustomization[] = []
+) {
+  const sortedIds = [...customizations]
+    .map((c) => c.id)
+    .sort()
+    .join("-");
+  return `${id}-${sortedIds || "default"}`;
+}
+
 function areCustomizationsEqual(
   a: CartCustomization[] = [],
   b: CartCustomization[] = []
@@ -37,7 +48,15 @@ export const useCartStore = create<CartStore>((set, get) => ({
       });
     } else {
       set({
-        items: [...get().items, { ...item, quantity: quantity, customizations }],
+        items: [
+          ...get().items,
+          {
+            ...item,
+            quantity: quantity,
+            customizations,
+            cartKey: generateCartItemKey(item.id, customizations),
+          },
+        ],
       });
     }
   },
