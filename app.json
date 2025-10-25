@@ -53,8 +53,9 @@
     "extra": {
       "router": {},
       "eas": {
-        "projectId": "4c6cee3f-ce65-43ef-86a3-1e6c5428ceb3"
+        "projectId": "1f1d9bb1-40b9-4225-91b4-01b253b2a5d7"
       }
-    }
+    },
+    "owner": "rkzeebon"
   }
 }
