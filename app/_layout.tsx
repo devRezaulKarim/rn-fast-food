@@ -2,6 +2,7 @@ import useAuthStore from "@/store/auth.store";
 import { useFonts } from "expo-font";
 import { SplashScreen, Stack } from "expo-router";
 import { useEffect } from "react";
+import Toast from "react-native-toast-message";
 import "./global.css";
 
 export default function RootLayout() {
@@ -24,5 +25,10 @@ export default function RootLayout() {
   }, []);
   if (!fontsLoaded || isLoading) return null;
 
-  return <Stack screenOptions={{ headerShown: false }} />;
+  return (
+    <>
+      <Stack screenOptions={{ headerShown: false }} />
+      <Toast visibilityTime={2500} />
+    </>
+  );
 }

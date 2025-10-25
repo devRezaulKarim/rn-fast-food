@@ -6,6 +6,7 @@ import { getMenuWithCustomizationById } from "@/lib/appwrite";
 import useAppwrite from "@/lib/useAppwrite";
 import { useCartStore } from "@/store/cart.store";
 import { CartCustomization, Customization } from "@/type";
+import cn from "clsx";
 import { useLocalSearchParams } from "expo-router";
 import React, { useState } from "react";
 import {
@@ -19,6 +20,7 @@ import {
   View,
 } from "react-native";
 import { SafeAreaView } from "react-native-safe-area-context";
+import Toast from "react-native-toast-message";
 
 interface CustomizationCardProps {
   item: Customization;
@@ -50,7 +52,10 @@ const CustomizationCard = ({
       <View className="p-4 flex-row justify-between items-center gap-x-2">
         <Text className="text-white">{item.name}</Text>
         <TouchableOpacity
-          className="bg-error items-center justify-center size-5 rounded-full"
+          className={cn(
+            "items-center justify-center size-5 rounded-full",
+            isSelected ? "bg-error" : "bg-primary"
+          )}
           onPress={() => onSelect(item)}
         >
           <Text className="text-white text-sm">{isSelected ? "-" : "+"}</Text>
@@ -89,8 +94,8 @@ const MenuDetails = () => {
   };
   const handleCustomizationSelect = (item: Customization) => {
     const { $id, name, price, type } = item;
+    const isExist = selectedCustomizations.find((sc) => sc.id === $id);
     setSelectedCustomizations((prev) => {
-      const isExist = prev.find((p) => p.id === $id);
       if (isExist) return prev.filter((p) => p.id !== $id);
       return [
         ...prev,
@@ -102,6 +107,17 @@ const MenuDetails = () => {
         },
       ];
     });
+    if (isExist) {
+      Toast.show({
+        type: "error",
+        text1: `${name} removed`,
+      });
+    } else {
+      Toast.show({
+        type: "success",
+        text1: `${name} added as ${type === "side" ? "side item" : "topping"}`,
+      });
+    }
   };
 
   const handleAddToCart = () => {
@@ -113,6 +129,10 @@ const MenuDetails = () => {
       image_url,
       customizations: selectedCustomizations,
       quantity,
+    });
+    Toast.show({
+      type: "success",
+      text1: `${name} added to cart`,
     });
   };
 

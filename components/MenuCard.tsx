@@ -3,6 +3,7 @@ import { MenuItem } from "@/type";
 import { useRouter } from "expo-router";
 import React from "react";
 import { Image, Platform, Text, TouchableOpacity } from "react-native";
+import Toast from "react-native-toast-message";
 
 const MenuCard = ({
   item: { $id, image_url, name, price },
@@ -38,6 +39,10 @@ const MenuCard = ({
         onPress={(e) => {
           e.stopPropagation();
           addItem({ id: $id, name, price, image_url, customizations: [] });
+          Toast.show({
+            type: "success",
+            text1: `${name} added to cart`,
+          });
         }}
       >
         <Text className="paragraph-bold text-primary">Add to cart +</Text>
