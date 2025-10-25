@@ -4,9 +4,9 @@ import CustomHeader from "@/components/CustomHeader";
 import { images } from "@/constants";
 import { getMenuWithCustomizationById } from "@/lib/appwrite";
 import useAppwrite from "@/lib/useAppwrite";
-import { Customization } from "@/type";
+import { CartCustomization, Customization } from "@/type";
 import { useLocalSearchParams } from "expo-router";
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import {
   ActivityIndicator,
   FlatList,
@@ -19,7 +19,17 @@ import {
 } from "react-native";
 import { SafeAreaView } from "react-native-safe-area-context";
 
-const CustomizationCard = ({ item }: { item: Customization }) => {
+interface CustomizationCardProps {
+  item: Customization;
+  isSelected: boolean;
+  onSelect: (item: Customization) => void;
+}
+
+const CustomizationCard = ({
+  item,
+  isSelected,
+  onSelect,
+}: CustomizationCardProps) => {
   return (
     <View
       className="bg-[#3C2F2F] rounded-3xl shadow"
@@ -38,8 +48,11 @@ const CustomizationCard = ({ item }: { item: Customization }) => {
       </View>
       <View className="p-4 flex-row justify-between items-center gap-x-2">
         <Text className="text-white">{item.name}</Text>
-        <TouchableOpacity className="bg-error items-center justify-center size-5 rounded-full">
-          <Text className="text-white text-sm">+</Text>
+        <TouchableOpacity
+          className="bg-error items-center justify-center size-5 rounded-full"
+          onPress={() => onSelect(item)}
+        >
+          <Text className="text-white text-sm">{isSelected ? "-" : "+"}</Text>
         </TouchableOpacity>
       </View>
     </View>
@@ -53,6 +66,13 @@ const MenuDetails = () => {
     params: { id },
   });
   const [quantity, setQuantity] = useState<number>(1);
+  const [selectedCustomizations, setSelectedCustomizations] = useState<
+    CartCustomization[]
+  >([]);
+
+  useEffect(() => {
+    console.log({ selectedCustomizations });
+  }, [selectedCustomizations]);
 
   if (loading) {
     return <ActivityIndicator size="large" color="#FF9C01" />;
@@ -68,6 +88,22 @@ const MenuDetails = () => {
   };
   const onIncrease = () => {
     setQuantity((prev) => prev + 1);
+  };
+  const handleCustomizationSelect = (item: Customization) => {
+    const { $id, name, price, type } = item;
+    setSelectedCustomizations((prev) => {
+      const isExist = prev.find((p) => p.id === $id);
+      if (isExist) return prev.filter((p) => p.id !== $id);
+      return [
+        ...prev,
+        {
+          id: $id,
+          name,
+          price,
+          type,
+        },
+      ];
+    });
   };
 
   if (!menu) {
@@ -138,7 +174,15 @@ const MenuDetails = () => {
             <FlatList
               horizontal
               data={toppingCUstomizations}
-              renderItem={({ item }) => <CustomizationCard item={item} />}
+              renderItem={({ item }) => (
+                <CustomizationCard
+                  item={item}
+                  isSelected={
+                    !!selectedCustomizations.find((sc) => sc.id === item.$id)
+                  }
+                  onSelect={handleCustomizationSelect}
+                />
+              )}
               keyExtractor={(item) => item.$id}
               ItemSeparatorComponent={() => <View className="w-3" />}
               showsHorizontalScrollIndicator={false}
@@ -152,7 +196,15 @@ const MenuDetails = () => {
             <FlatList
               horizontal
               data={sideCUstomizations}
-              renderItem={({ item }) => <CustomizationCard item={item} />}
+              renderItem={({ item }) => (
+                <CustomizationCard
+                  item={item}
+                  isSelected={
+                    !!selectedCustomizations.find((sc) => sc.id === item.$id)
+                  }
+                  onSelect={handleCustomizationSelect}
+                />
+              )}
               keyExtractor={(item) => item.$id}
               ItemSeparatorComponent={() => <View className="w-3" />}
               showsHorizontalScrollIndicator={false}
