@@ -125,7 +125,7 @@ const MenuDetails = () => {
   }
 
   return (
-    <SafeAreaView className="p-4 relative">
+    <SafeAreaView className="p-4 relative bg-white ">
       <CustomHeader />
       <ScrollView showsVerticalScrollIndicator={false}>
         <Image
